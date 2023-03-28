@@ -13,17 +13,20 @@ hearts.forEach((heart) => {
   heart.addEventListener("click", () => {
     mimicServerCall()
       .then((res) => {
-        if (!res.ok) {
-          throw new Error("Error");
+        if (res.status > 200 && res.status < 300) {
+          res.json();
         }
-        return res.json();
       })
-      .then((data) => {
-        console.log(data);
-        heart.classList.add("activated-heart");
+      .then(() => {
+        if (heart.classList.contains("activated-heart")) {
+          heart.classList.remove("activated-heart");
+        } else {
+          heart.classList.add("activated-heart");
+        }
       })
       .catch((error) => {
-        console.log(`${error} sawa`);
+        const modalMessage = modal.querySelector("#modal-message");
+        modalMessage.textContent = error;
         modal.classList.remove("hidden");
         setTimeout(() => {
           modal.classList.add("hidden");
